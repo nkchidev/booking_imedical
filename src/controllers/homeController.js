@@ -18,7 +18,6 @@ let postCreateUser = async (req, res) => {
 
 let getUsersPage = async (req, res) => {
     let users = await service.getAllUsers();
-    console.log(users); 
     return res.render('user', {users});
 }
 
@@ -37,6 +36,16 @@ let getUserUpdatePage = async (req, res) => {
     let users = await service.updateUser(data);
     return res.render('user',{users});
 }
+
+let getUserDeletePage = async(req, res) => {
+    let id = req.query.id;
+    if(id){
+        await service.deleteUserById(id);
+        return res.send('Delete the user succeed!');
+    }else{
+        return res.send('User not find');
+    }
+}
  
 module.exports = {
     getHomePage,
@@ -44,5 +53,6 @@ module.exports = {
     postCreateUser,
     getUsersPage,
     getUserEditPage,
-    getUserUpdatePage
+    getUserUpdatePage,
+    getUserDeletePage
 }
