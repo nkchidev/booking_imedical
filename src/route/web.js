@@ -7,6 +7,8 @@ let initWebRoutes = (app) => {
     router.get('/', homeController.getHomePage);
     router.get('/users', homeController.getUsersPage);
     router.get('/user/create', homeController.getUserCreatePage);
+    router.get('/user/edit', homeController.getUserEditPage);
+    router.post('/user/update', homeController.getUserUpdatePage);
     router.post('/post-crud', homeController.postCreateUser);
 
     return app.use('/', router);

@@ -21,10 +21,28 @@ let getUsersPage = async (req, res) => {
     console.log(users); 
     return res.render('user', {users});
 }
+
+let getUserEditPage = async (req, res) => {
+    let id = req.query.id;
+    if(id){
+        let userEdit = await service.getUserInfoById(id);
+        return res.render('user/edit.ejs',{userEdit});
+    }else{
+        return res.send('User not found');
+    }
+}
+
+let getUserUpdatePage = async (req, res) => {
+    let data = req.body;
+    let users = await service.updateUser(data);
+    return res.render('user',{users});
+}
  
 module.exports = {
     getHomePage,
     getUserCreatePage,
     postCreateUser,
-    getUsersPage
+    getUsersPage,
+    getUserEditPage,
+    getUserUpdatePage
 }
