@@ -13,11 +13,18 @@ let getUserCreatePage = (req, res) => {
 let postCreateUser = async (req, res) => {
     let message = await service.createUser(req.body);
     console.log(message);
-    return res.send('Post crud user from server')
+    return res.send('Post crud user from server');
 }
 
+let getUsersPage = async (req, res) => {
+    let users = await service.getAllUsers();
+    console.log(users); 
+    return res.render('user', {users});
+}
+ 
 module.exports = {
     getHomePage,
     getUserCreatePage,
-    postCreateUser
+    postCreateUser,
+    getUsersPage
 }
