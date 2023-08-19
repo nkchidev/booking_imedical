@@ -35,7 +35,7 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      posittionId: {
+      positionId: {
         type: Sequelize.STRING
       },
       createdAt: {
