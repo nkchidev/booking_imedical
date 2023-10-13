@@ -43,10 +43,10 @@ let handleCreateUser = async (req,res) => {
 let handleEditUser = async (req,res) => {
     let data = req.body;
     let message = await UserService.updateUser(data);
-    return res.status(200).json({message});
+    return res.status(200).json(message);
 }
 
-let handleDeleteUser = async () => {
+let handleDeleteUser = async (req,res) => {
     if(!req.body.id){
         return res.status(200).json({
             errCode: 1,
@@ -54,7 +54,7 @@ let handleDeleteUser = async () => {
         });
     }
     let message = await UserService.deleteUser(req.body.id);
-    return res.status(200).json({message});
+    return res.status(200).json(message);
  }
 
 module.exports = {
