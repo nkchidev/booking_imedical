@@ -46,7 +46,7 @@ let checkUserEmail = (email) => {
     return new Promise(async(resolve, reject) => {
         try {
             let user = await db.User.findOne({
-                attributes: ['email', 'roleId', 'password'],
+                attributes: ['email', 'roleId', 'password', 'firstname', 'lastname'],
                 where: {email : email},
                 raw: true
             });
@@ -105,8 +105,10 @@ let createUser = (data) => {
                     lastname: data.lastname,
                     phonenumber: data.phonenumber,
                     address: data.address,
-                    gender: data.gender === '1' ? true : false,
+                    gender: data.gender,
                     roleId: data.roleId,
+                    positionId: data.positionId,
+                    image: data.avatar
                 });
                 resolve({
                     errCode: 0,
@@ -148,7 +150,7 @@ let deleteUser = (id) => {
 let updateUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if(!data.id){
+            if(!data.id || !data.roleId || !data.positionId || !data.gender){
                 resolve({
                     errCode: 2,
                     errMessage: 'Missing required parameters'
@@ -159,11 +161,18 @@ let updateUser = (data) => {
                 raw: false
             });
             if (user) {
-                user.firstname = data.firstname,
-                user.lastname = data.lastname,
-                user.email = data.email,
-                user.phonenumber = data.phonenumber,
-                user.address = data.address,
+                user.firstname = data.firstname;
+                user.lastname = data.lastname;
+                user.email = data.email;
+                user.phonenumber = data.phonenumber;
+                user.address = data.address;
+                user.roleId = data.roleId;
+                user.gender = data.gender;
+                user.positionId = data.positionId;
+                if(data.avatar){
+                    user.image = data.avatar;
+                }
+
                 await user.save();
                 resolve({
                     errCode: 0,
@@ -199,7 +208,7 @@ let getAllCodeService = type => {
                 resolve(res);
             }
         } catch (error) {
-            
+            reject(error)
         }
     });
 }
