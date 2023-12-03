@@ -143,7 +143,7 @@ let bulkCreateSchedule =  (data) =>{
                     errMessage: 'Missing required param!'
                 })
             }else{      
-                 let schedule = data.arrSchedule;
+                let schedule = data.arrSchedule;
                 if(schedule && schedule.length > 0){
 
                     schedule = schedule.map (item  => {
@@ -152,28 +152,21 @@ let bulkCreateSchedule =  (data) =>{
                     })
                 }
 
-               // console.log('hospital: data send:', schedule)
-                
                 let existing = await db.Schedule.findAll(
-                    { where: {doctorId: data.doctorId, date:data.formatedDate},
-                    attributes:['timeType', 'date','doctorId','maxNumber'],
-                    raw: true
+                    { 
+                        where: {doctorId: data.doctorId, date: data.formatedDate},
+                        attributes:['timeType', 'date','doctorId','maxNumber'],
+                        raw: true
                     }
                 );
 
-
-                let toCreate = _.differenceWith(schedule, existing,(a, b) => {
+                let toCreate = _.differenceWith(schedule, existing, (a, b) => {
                     return a.timeType === b.timeType && +a.date === +b.date;
                 });
 
                 if(toCreate && toCreate.length > 0){
                     await db.Schedule.bulkCreate(toCreate);
                 }
-                //let toCreate =_.differenceBy(schedule, existing,['timeType', 'date']);
-               // console.log('check different ================',toCreate)
-
-                
-               //await db.Schedule.bulkCreate(schedule);
 
                 resolve({
                     errCode: 0,
