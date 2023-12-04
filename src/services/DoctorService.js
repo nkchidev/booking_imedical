@@ -328,7 +328,7 @@ let getProfileDoctorById = (id) => {
                             },
                             include: [                            
                                 { model: db.Allcode, as: 'priceTypeData', attributes: ['valueEn', 'valueVi'] },
-                                { model: db.Allcode, as: 'province TypeData', attributes: ['valueEn', 'valueVi']},
+                                { model: db.Allcode, as: 'provinceTypeData', attributes: ['valueEn', 'valueVi']},
                                 { model: db.Allcode, as: 'paymentTypeData', attributes: ['valueEn', 'valueVi']},
                             ]
                         },
