@@ -1,6 +1,7 @@
 import db from "../models/index";
 require('dotenv').config();
 import _, { reject } from 'lodash';
+import EmailService from "./EmailSerivce"
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 let getTopDoctorHome = (limit) => {
@@ -400,7 +401,10 @@ let getListPatientForDoctor = (doctorId, date) =>{
                             include: [                            
                                 { model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] 
                             }],
-                        },                    
+                        },  
+                        {
+                            model: db.Allcode, as: 'timeTypeDataPatient', attributes: ['valueEn', 'valueVi']
+                        },                  
                     ],
                     raw: false,
                     nest: true
@@ -419,6 +423,45 @@ let getListPatientForDoctor = (doctorId, date) =>{
     })
 }
 
+let sendRemedy  = (data) =>{
+    return new Promise( async(resolve, reject) =>{
+        try{
+            if (!data.email || !data.doctorId || !data.patientId || !data.timeType || !data.imageBase64) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameters'
+                })
+            } else {    
+                // update patient status
+                let appointment = await db.Booking.findOne({
+                    where: {
+                        doctorId: data.doctorId,
+                        patientId: data.patientId,
+                        timeType: data.timeType,
+                        statusId: 'S2'
+                    },
+                    raw: false
+                });
+
+                if(appointment){
+                    appointment.statusId = 'S3';
+                    await appointment.save();
+                }
+                await EmailService.sendAttachment(data);
+
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Save infor patient succeed!'
+                });
+
+            }
+
+        }catch(e){
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     getTopDoctorHome,
     getDetailDoctorById,
@@ -428,5 +471,6 @@ module.exports = {
     getScheduleByDate,
     getExtraInforDoctorById,
     getProfileDoctorById,
-    getListPatientForDoctor
+    getListPatientForDoctor,
+    sendRemedy
 }

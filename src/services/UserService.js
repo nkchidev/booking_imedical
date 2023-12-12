@@ -46,7 +46,7 @@ let checkUserEmail = (email) => {
     return new Promise(async(resolve, reject) => {
         try {
             let user = await db.User.findOne({
-                attributes: ['email', 'roleId', 'password', 'firstname', 'lastname'],
+                attributes: ['id', 'email', 'roleId', 'password', 'firstname', 'lastname'],
                 where: {email : email},
                 raw: true
             });
