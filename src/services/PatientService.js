@@ -30,12 +30,13 @@ let postBookAppointmentService = (data) => {
 
                 let user = await db.User.findOrCreate({
                     where: { email: data.email },
-                    default: {
+                    defaults: {
                         email: data.email,
                         roleId: 'R3',
                         gender: data.selectedGender,
                         address: data.address,
-                        firstName: data.fullName
+                        firstname: data.fullname,
+                        phonenumber: data.phoneNumber,
                     }
                 });
 
